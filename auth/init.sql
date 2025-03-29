@@ -1,0 +1,1 @@
+CREATE USER 'auth_user'@'localhost' IDENTIFIED BY 'Aauth123';
