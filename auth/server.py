@@ -11,3 +11,9 @@ server.config['MYSQL_PASSWORD'] = 'admin'
 server.config['MYSQL_DB'] = 'auth'
 server.config['MYSQL_PORT'] = 3306
 
+server.route('/login', methods=['POST'])
+def login():
+    auth = request.authorization
+
+    if not auth or not auth.username or not auth.password:
+        return 'Missing credentials', 401
