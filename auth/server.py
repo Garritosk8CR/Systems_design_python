@@ -1,5 +1,5 @@
-import jwt, datetime, os
-from flask import Flask, request
+import jwt, datetime, os # type: ignore
+from flask import Flask, request # type: ignore
 from flask_mysqldb import MySQL
 
 server = Flask(__name__)

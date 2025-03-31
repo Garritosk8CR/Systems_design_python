@@ -19,12 +19,12 @@ spec:
         app: auth
     spec:
       containers:
-        - name: auth
-          image: garritosk8cr/auth
-          ports:
-            - containerPort: 5000
-          envFrom:
-            - configMapRef:
-                name: auth-configmap
-              secretRef:
-                name: auth-secret
+      - name: auth
+        image: garritosk8cr/auth
+        ports:
+        - containerPort: 5000
+        envFrom:
+        - configMapRef:
+            name: auth-configmap
+        - secretRef:
+            name: auth-secret
