@@ -29,3 +29,24 @@ def login():
 @server.route('/upload', methods=['POST'])
 def upload():
     access, err = validate.token(request)
+
+    access = json.loads(access)
+
+    if access['admin']:
+        if len(request.files) > 1 or len(request.files) < 1:
+            return 'Error: Please provide exactly one file', 400
+        for _, f in request.files.items():
+            err = util.upload(f, fs, channel, access)
+            if err:
+                return err
+        
+        return 'File uploaded successfully'
+    else:
+        return 'Not authorized', 401
+    
+@server.route('/download', methods=['GET'])
+def download():
+    pass
+
+if __name__ == '__main__':
+    server.run(host='0.0.0.0', port=8080)
