@@ -12,4 +12,5 @@ spec:
         backend:
           service:
             name: rabbitmq
-            port: 15672
+            port:
+              number: 15672
