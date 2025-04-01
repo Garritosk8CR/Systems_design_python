@@ -22,4 +22,5 @@ def upload(f, fs, channel, access):
             )
         )
     except Exception as e:
+        fs.delete(fid)
         return 'File upload failed', 500
