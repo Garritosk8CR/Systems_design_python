@@ -1,18 +1,22 @@
 import jwt, datetime, os # type: ignore
 from flask import Flask, request # type: ignore
 from flask_mysqldb import MySQL
+import logging
 
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 server = Flask(__name__)
 mysql = MySQL(server)
 # Database configuration
 server.config['MYSQL_HOST'] = os.environ.get('MYSQL_HOST')
 server.config['MYSQL_USER'] = os.environ.get('MYSQL_USER')
 server.config['MYSQL_PASSWORD'] = os.environ.get('MYSQL_PASSWORD')
-server.config['MYSQL_DB'] = os.environ.get('MYSQL_DB')
-server.config['MYSQL_PORT'] = os.environ.get('MYSQL_PORT')
+server.config['MYSQL_DB'] = os.environ.get('MYSQL_DATABASE')
+server.config['MYSQL_PORT'] = int(os.environ.get('MYSQL_PORT'))  # Convert to int
 
-server.route('/login', methods=['POST'])
+
+@server.route('/login', methods=['POST'])
 def login():
+    logging.info("login called")
     auth = request.authorization
 
     if not auth or not auth.username or not auth.password:
@@ -24,18 +28,16 @@ def login():
     )
     if result > 0:
         user = cursor.fetchone()
-        email = user[0]
-        password = user[1]
-
+        email = user[1]
+        password = user[2] 
         if auth.username != email or auth.password != password:
-            return 'Invalid credentials', 401
+            return 'Invalid credentials (password or email)', 401
         else:
             return createJWT(auth.username, os.environ.get('JWT_SECRET'), True), 200
-
     else:
-        return 'Invalid credentials', 401
+        return 'Invalid credentials or user does not exist', 401
     
-server.route('/validate', methods=['POST'])
+@server.route('/validate', methods=['POST'])
 def validate():
     encoded_jwt = request.headers['Authorization']
 
